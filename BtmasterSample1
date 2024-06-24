@@ -1,0 +1,57 @@
+#include <M5Unified.h>
+
+<略>
+//bluetooth deviceAddress 
+uint8_t atomlite1_address[6] = {0x--,0x--,0x--,0x--,0x--,0x--};
+
+<略>
+
+void bluetoothSerialBegin(uint8_t *address)
+{
+  bool ret=false;
+  //isMaster set to true if you want to connect to an other device
+  SerialBT.begin("Core2",true);//Master mode
+  Serial.println("begin connect");
+  M5.Display.setCursor(0,53);
+  if(btConnectCounter!=0)
+  {//リトライ接続時の表示
+    M5.Display.setTextColor(CYAN);
+    M5.Display.print(" Now Search the device.");
+  }
+  M5.Display.setCursor(0,53);
+  
+  //bluetoothデバイスサーチと接続
+  //advertisingパケット受信。
+  //ATOMLite側のアドバタイズは停止していない。
+  int times=0;
+  do
+  {
+    connected = SerialBT.connect(address);//10秒でタイムアウト
+    Serial.printf("%d connected=%d ",times,connected);
+    times++;
+    if(times==30)
+    {
+      Serial.println("error:connect timeout");
+      M5.Display.println("connect timeOut");
+      break;
+    }
+  }while(!connected);
+  Serial.println("");
+  delay(30);
+  if (connected) 
+  {//接続成功
+    btConnectCounter++;
+    Serial.printf("Connected Succesfully!\n\r");
+    M5.Display.fillRect(0,53,320,28,BLACK);
+    M5.Display.setTextColor(SKYBLUE);
+    M5.Display.printf(" ATOM Lite01 Connected.%d\r\n",btConnectCounter);
+    
+      
+  } else 
+  {//接続失敗
+      while (!SerialBT.connected(10000)) {
+          Serial.println("Failed to connect.");
+          M5.Display.drawString(" Failed to connect.",0,50);
+      }
+  }
+}
