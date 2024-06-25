@@ -20,12 +20,14 @@ void my_task(void *arg)
     {
         String str = SerialBT.readStringUntil('\n');
         uint length = str.length();
-        Serial.print("echo=> ");
-        Serial.print(str);
-        Serial.printf("length=%d\r",length);
+        //Serial.print("echo=> ");
+        //Serial.print(str);
+        //Serial.printf("length=%d\r",length);
+        //Serial1.printf("%s\n",str);
         char ch[length+1];
         str.toCharArray(ch,length+1,0);
         buttonState = strtol(ch,NULL,16);
+        Serial1.printf("%04x\r\n",buttonState);
         buttonName = famiconGetButtonName(buttonState);
         //SSD1306 表示------------------------------------
         canvas.startWrite();//通信を開始する。（ペリフェラルを占有する）

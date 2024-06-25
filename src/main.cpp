@@ -12,8 +12,8 @@ SK6812 LED グラデーション表示
 #include "myTask.hpp"
 
 
-
-uint cnt= 0; 
+//main グローバル変数
+int cnt=0;
 
 /// @brief セットアップ
 void setup() 
@@ -43,12 +43,14 @@ void setup()
   canvas.setTextWrap(true);      //自動折返し：無し
   canvas.fillScreen(TFT_BLACK);   //背景塗りつぶし
   canvas.setTextColor(TFT_WHITE); //文字色
-
+  //Serial1初期化
+  Serial1.begin(115200,SERIAL_8N1,G22,G19);
   //タスク開始---------------------
   setupTask();
   //グローバル変数　カウント値初期化
   cnt=0;
 }
+
 
 /// @brief メインループ
 void loop() 
